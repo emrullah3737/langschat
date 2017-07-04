@@ -9,7 +9,7 @@
 
   At the ```Models``` folder u can create mongoose model 
 
-    ```js
+    ```javascript
     const mongoose = require('mongoose');
     const express = require('express');
     const Model = require('../config/model');
@@ -58,12 +58,12 @@
     module.exports = User;
     ```
 
-## Create Model
+## Setting Model
 
 
   At the ```configuration.json``` file u must add model name
 
-    ```js
+    ```javascript
     "models": [
       "user",
       "profile"
