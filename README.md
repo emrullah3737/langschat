@@ -1,8 +1,8 @@
 ## Emochu.io
 
-  $ git clone ```https://github.com/emrullah3737/emochu.io.git```
-  $ npm install
-  $ node app
+$ git clone ```https://github.com/emrullah3737/emochu.io.git```
+$ npm install
+$ node app
 
 ## Create Model
 
@@ -66,4 +66,4 @@ At the ```configuration.json``` file u must add model name
   "user",
   "profile"
 ]
-    ```
+```
