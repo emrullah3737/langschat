@@ -1,13 +1,15 @@
-Emochu.io
+## Emochu.io
 
     $ git clone https://github.com/emrullah3737/emochu.io.git
     $ npm install
     $ node app
 
-create model
+## Create Model
 
-    at the models folder u can create mongoose model
-    ```javascript
+
+  At the ```Models``` folder u can create mongoose model 
+
+    ```js
     const mongoose = require('mongoose');
     const express = require('express');
     const Model = require('../config/model');
@@ -55,8 +57,13 @@ create model
 
     module.exports = User;
     ```
-    and at the configuration.json file u must add model name
-    ```javascript
+
+## Create Model
+
+
+  At the ```configuration.json``` file u must add model name
+
+    ```js
     "models": [
       "user",
       "profile"
