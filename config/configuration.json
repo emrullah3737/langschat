@@ -1,0 +1,32 @@
+{
+  "appName": "deneme",
+  "configuration": "dev",
+  "dev": {
+    "endpoint": "http://127.0.0.1:8080/",
+    "port": "8080",
+    "logLevel": "debug",
+    "X-Client-Id": "594b88dc81f8c13c32c6737e",
+    "X-Client-Secret": "594b88dc81f8c13c32c67377",
+    "admin": {
+      "mail": "admin@admin.com",
+      "password": "12345",
+      "role": "SuperAdmin"
+    },
+    "models": [
+      "user",
+      "profile"
+    ]
+  },
+  "test": {
+    "endpoint": "",
+    "logLevel": "debug",
+    "X-Client-Id": "",
+    "X-Client-Secret": ""
+  },
+  "production": {
+    "endpoint": "",
+    "logLevel": "debug",
+    "X-Client-Id": "",
+    "X-Client-Secret": ""
+  }
+}
