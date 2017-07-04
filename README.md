@@ -1,8 +1,8 @@
 ## Emochu.io
 
-$ git clone ```https://github.com/emrullah3737/emochu.io.git```
-$ npm install
-$ node app
+- $ git clone ```https://github.com/emrullah3737/emochu.io.git```
+- $ npm install
+- $ node app
 
 ## Create Model
 
