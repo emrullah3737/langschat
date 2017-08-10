@@ -6,18 +6,18 @@ const configs = require('../config/config');
 const router = express.Router();
 
 const config = {
-  name: 'heroes',
+  name: 'students',
   model: {
     name: {
       type: String,
       required: true,
     },
-    id: {
+    number: {
       type: Number,
       required: true,
     },
   },
 };
-const heroes = new Model(config);
+const students = new Model(config);
 
-module.exports = heroes;
+module.exports = students;
