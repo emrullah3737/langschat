@@ -14,7 +14,8 @@
     },
     "models": [
       "user",
-      "profile"
+      "profile",
+      "heroes"
     ]
   },
   "test": {

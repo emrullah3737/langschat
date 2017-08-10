@@ -70,8 +70,7 @@ module.exports = class Mongo {
           };
           if (err) this.status403(req, res, err);
           else this.status200(req, res, obj);
-        },
-      );
+        });
     } else this.specErr(req, res);
   }
 

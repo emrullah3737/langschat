@@ -19,8 +19,7 @@ router.use(
     secret: 'secret',
     resave: false,
     saveUninitialized: true,
-  }),
-);
+  }));
 
 router.use('/', Login);
 // PAGES
