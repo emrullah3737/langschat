@@ -40,6 +40,9 @@ User.Model.findOneAndUpdate(
   adminData,
   adminData,
   { upsert: true },
-  (err, res) => {});
+  (err, res) => {
+    console.log('Super Admin');
+    console.log(res);
+  });
 
 module.exports = User;
