@@ -1,6 +1,6 @@
 {
   "appName": "deneme",
-  "configuration": "dev",
+  "configuration": "production",
   "dev": {
     "endpoint": "",
     "port": "8080",
