@@ -1,8 +1,13 @@
 {
   "appName": "deneme",
-  "configuration": "production",
+  "configuration": "dev",
   "dev": {
-    "endpoint": "",
+    "endpoint": "localhost",
+    "db": {
+      "host": "localhost",
+      "user": "",
+      "password": ""
+    },
     "port": "8080",
     "logLevel": "debug",
     "X-Client-Id": "594b88dc81f8c13c32c6737e",
@@ -25,7 +30,12 @@
     "X-Client-Secret": ""
   },
   "production": {
-    "endpoint": "",
+    "endpoint": "18.220.70.93",
+    "db": {
+      "host": "18.220.70.93",
+      "user": "langschat",
+      "password": "m1h8r513737"
+    },
     "port": "8080",
     "logLevel": "debug",
     "X-Client-Id": "594b88dc81f8c13c32c6737e",

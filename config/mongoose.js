@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
+const config = require('./config');
 
 mongoose.Promise = global.Promise;
 
@@ -10,7 +11,11 @@ class Mongo {
 
   connect(dbName) {
     this.dbName = dbName;
-    mongoose.connect(`mongodb://localhost/${dbName}`);
+    const host = config.getDbOptions().host || '';
+    const user = config.getDbOptions().user || '';
+    const password = config.getDbOptions().password || '';
+
+    mongoose.connect(`mongodb://${user}:${password}@${host}/${dbName}`);
     this.connection();
   }
 

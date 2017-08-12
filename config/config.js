@@ -24,5 +24,9 @@ class Config {
   getModel() {
     return (this.response[this.response.configuration]).models;
   }
+
+  getDbOptions() {
+    return (this.response[this.response.configuration]).db;
+  }
 }
 module.exports = new Config();
