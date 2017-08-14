@@ -30,9 +30,9 @@
     "X-Client-Secret": ""
   },
   "production": {
-    "endpoint": "18.220.70.93",
+    "endpoint": "18.220.187.159",
     "db": {
-      "host": "18.220.70.93",
+      "host": "18.220.187.159",
       "user": "langschat",
       "password": "m1h8r513737"
     },
