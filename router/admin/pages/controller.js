@@ -2,8 +2,8 @@ const middle = {};
 let Models = {};
 middle.add = (req, res, next) => {
   const mdl = req.mdl;
-
-  if (req.file) req.body.file = `${req.file.destination}${req.file.filename}`;
+  const dir = req.file.destination.split('public/')[1];
+  if (req.file) req.body.file = `${dir}${req.file.filename}`;
 
   Models = require(`../../../models/${mdl}`);
   Models.Model.create(req.body, (err, user) => {
