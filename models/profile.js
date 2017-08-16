@@ -15,6 +15,7 @@ const model = {
     type: Number,
     required: true,
   },
+  photo: { type: mongoose.Schema.Types.ObjectId, ref: 'file', required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
 };
 
@@ -23,6 +24,15 @@ const schema = new Schema(model);
 const config = {
   name: 'profile',
   schema,
+  owner: {
+    key: 'user',
+  },
+  protect: {
+    post: true,
+    get: false,
+    put: true,
+    delete: true,
+  },
 };
 const Profile = new Model(config);
 

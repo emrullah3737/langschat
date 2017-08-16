@@ -50,6 +50,7 @@ HandleBars.registerHelper('record', (data) => {
   let str = '';
   const newObj = JSON.parse(JSON.stringify(data));
   _.each(newObj, (el, key) => {
+    console.log('el', el);
     if (el.enums !== undefined) {
       str += `<div class="col-md-3">${el.field}</div><div class="col-md-9">
       <div class="form-group"><label for="${el.field}" class="sr-only">${el.field}</label>
@@ -59,12 +60,12 @@ HandleBars.registerHelper('record', (data) => {
       });
       str += '</select></div></div><div class="col-md-12"><hr></div>';
     } else if (el.ref !== undefined) {
-      console.log(el);
+      console.log(el.ref.response);
       str += `<div class="col-md-3">${el.field}</div><div class="col-md-9">
       <div class="form-group"><label for="${el.field}" class="sr-only">${el.field}</label>
       <select class="form-control s-b" name="${el.field}">`;
       _.each(el.ref.response, (mdlval, mdlkey) => {
-        str += `<option value="${mdlval._id}">${mdlval.mail}</option>`;
+        str += `<option value="${mdlval._id}">${mdlval._id}</option>`;
       });
       str += '</select></div></div><div class="col-md-12"><hr></div>';
     } else {

@@ -65,6 +65,7 @@ module.exports = class Mongo {
       limit = parseInt(req.query.l, 10) || parseInt(req.query.limit, 10) || 10;
       sort = req.query.s || req.query.sort || '';
       populate = req.query.p || req.query.populate || '';
+      populate = populate.split(',');
     }
 
     return this.token(req, (error, decode) => {
