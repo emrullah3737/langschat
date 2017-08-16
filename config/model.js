@@ -1,15 +1,22 @@
 const mongoose = require('mongoose');
+const _ = require('underscore');
 const config = require('./config');
+const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 
 module.exports = class Mongo {
-  constructor({ name = 'modelName', model = {} }) {
-    this.model({ name, model });
+  constructor(opt = { name: 'modelName', schema: {} }) {
+    const name = opt.name;
+    const schema = opt.schema;
+    this.Schema = schema;
+    this.protect = opt.protect ? opt.protect : undefined;// protect requests
+    this.owner = opt.owner ? opt.owner : undefined;// owner id (for token)
+    this.mask = opt.mask ? opt.mask : undefined;// masking fields
+    this.model({ name, schema });
     this.setRouter(name);
   }
 
-  model({ name = 'modelName', model = {} }) {
-    const schema = mongoose.Schema(model);
+  model({ name = 'modelName', schema = {} }) {
     const Model = mongoose.model(name, schema);
     this.Model = Model;
     return Model;
@@ -28,27 +35,48 @@ module.exports = class Mongo {
     };
   }
 
+  find(req, res, cond, populate, sort, limit) {
+    this.Model.find(cond, (err, data) => {
+      if (this.mask) {
+        _.mapObject(data, (e, i) => {
+          const deepData = e;
+          _.each(this.mask, (de, di) => {
+            if (de) deepData[di] = undefined;
+          });
+          return deepData;
+        });
+      }
+      if (!err && data.length > 0) this.status200(req, res, data);
+      else this.status404(req, res, err);
+    }).populate(populate).sort(sort).limit(limit);
+  }
+
   getData(req, res) {
+    if (this.protect && this.protect.get) return this.status403(req, res);
     if (this.headerController(req) === false) return this.status403(req, res);
+
     let limit = 10;
     let sort = '';
     let populate = '';
+    const cond = {};
+    if (req.params.id !== undefined) cond._id = req.params.id;
+
     if (req.query) {
       limit = parseInt(req.query.l, 10) || parseInt(req.query.limit, 10) || 10;
       sort = req.query.s || req.query.sort || '';
       populate = req.query.p || req.query.populate || '';
     }
 
-    const cond = {};
-    if (req.params.id !== undefined) cond._id = req.params.id;
-
-    this.Model.find(cond, (err, data) => {
-      if (!err && data.length > 0) this.status200(req, res, data);
-      else this.status404(req, res, err);
-    }).populate(populate).sort(sort).limit(limit);
+    return this.token(req, (error, decode) => {
+      if (this.owner && !error) {
+        if (this.owner.key) cond[this.owner.key] = decode._id;
+      } else if (this.owner && error) return this.status403(req, res);
+      this.find(req, res, cond, populate, sort, limit);
+    });
   }
 
   postData(req, res) {
+    if (this.protect && this.protect.post) return this.status403(req, res);
     if (this.headerController(req) === false) return this.status403(req, res);
     const model = new this.Model(req.body);
     model.save((err, data) => {
@@ -58,6 +86,7 @@ module.exports = class Mongo {
   }
 
   putData(req, res) {
+    if (this.protect && this.protect.put) return this.status403(req, res);
     if (this.headerController(req) === false) return this.status403(req, res);
     if (req.params.id !== undefined) {
       this.Model.update(
@@ -75,6 +104,7 @@ module.exports = class Mongo {
   }
 
   deleteData(req, res) {
+    if (this.protect && this.protect.delete) return this.status403(req, res);
     if (this.headerController(req) === false) return this.status403(req, res);
     if (req.params.id !== undefined) {
       this.Model.remove({ _id: req.params.id }, (err, data) => {
@@ -104,12 +134,20 @@ module.exports = class Mongo {
     res.status(400).json({ err: 'ValidationError', message: 'id is undefined', meta: 404 });
   }
 
+  token(req, cb) {
+    const ClientToken = req.get('X-Client-Token') || '';
+    jwt.verify(ClientToken, 'secret', (err, decode) => {
+      if (err) return cb(true, null);
+      return cb(null, decode);
+    });
+  }
+
   headerController(req) {
     const Id = config.getData('X-Client-Id');
     const Secret = config.getData('X-Client-Secret');
     const ClientId = req.get('X-Client-Id');
     const ClientSecret = req.get('X-Client-Secret');
-    if (Id !== ClientId || Secret !== ClientSecret) return false;
+    if ((Id !== '' && Secret !== '') && (Id !== ClientId || Secret !== ClientSecret)) return false;
     return true;
   }
 };

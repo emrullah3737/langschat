@@ -18,9 +18,9 @@
       "role": "SuperAdmin"
     },
     "models": [
-      "user",
+      "file",
       "profile",
-      "students"
+      "user"
     ]
   },
   "test": {
@@ -30,9 +30,9 @@
     "X-Client-Secret": ""
   },
   "production": {
-    "endpoint": "18.220.187.159",
+    "endpoint": "13.59.112.159",
     "db": {
-      "host": "18.220.187.159",
+      "host": "13.59.112.159",
       "user": "langschat",
       "password": "m1h8r513737"
     },
@@ -46,9 +46,9 @@
       "role": "SuperAdmin"
     },
     "models": [
-      "user",
+      "file",
       "profile",
-      "students"
+      "user"
     ]
   }
 }

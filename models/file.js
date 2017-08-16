@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const express = require('express');
+const mongoose = require('mongoose');
 const Model = require('../config/model');
 const configs = require('../config/config');
 
@@ -11,19 +11,28 @@ const model = {
     type: String,
     required: true,
   },
-  phone: {
-    type: Number,
-    required: true,
+  file: {
+    file: true,
+    type: String,
+    required: false,
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
 };
-
 const schema = new Schema(model);
 
 const config = {
-  name: 'profile',
+  name: 'file',
   schema,
 };
-const Profile = new Model(config);
 
-module.exports = Profile;
+schema.pre('save', function (next) {
+  const self = this;
+  if (self.isNew) {
+    console.log(self);
+  }
+  next();
+});
+
+
+const File = new Model(config);
+
+module.exports = File;

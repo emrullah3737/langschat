@@ -46,34 +46,33 @@
           <li>
             <a href="/admin/index"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>
           </li>
-          {{#each pages}}
-          {{#if_eq ../el this}}
-            <li class="active">
-          {{else}}
+          {{#each pages}} {{#if_eq ../el this}}
+          <li class="active">
+            {{else}}
             <li class="">
-          {{/if_eq}}
+              {{/if_eq}}
               <a href="/admin/{{this}}"><i class="fa fa-angle-right"></i> <span class="nav-label">{{this}}</span></a>
             </li>
-          {{/each}}
+            {{/each}}
         </ul>
       </div>
     </nav>
 
     <div id="page-wrapper" class="gray-bg">
       <div class="row border-bottom">
-                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-                  <div class="navbar-header">
-                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary  binded" href="#"><i class="fa fa-bars"></i> </a>
-                    </div>
-                    <ul class="nav navbar-top-links navbar-right">
-                        <li>
-                            <a href="logout">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+          <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary  binded" href="#"><i class="fa fa-bars"></i> </a>
+          </div>
+          <ul class="nav navbar-top-links navbar-right">
+            <li>
+              <a href="logout">
                         <i class="fa fa-sign-out"></i> Log out
                     </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
       <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
           <h2>{{el}}</h2>
@@ -103,10 +102,21 @@
                 </div>
               </div>
               <div class="ibox-content">
-                <form role="form" class="form-inline" method="post" action="/admin/add{{el}}">
+                <form role="form" class="form-inline" method="post" enctype="multipart/form-data" action="/admin/add{{el}}">
                   <div class="row">
-                    {{#record fieldObj}}
-                    {{/record}}
+                    {{#if fileArr}}
+                      {{#each fileArr}}
+                        <div class="col-md-3">{{field}}</div>
+                        <div class="col-md-9">
+                          <div class="form-group"><label for="{{field}}" class="sr-only">{{field}}</label>
+                            <input type="file" name="{{field}}" class="form-control"></div>
+                        </div>
+                        <div class="col-md-12">
+                          <hr>
+                        </div>
+                      {{/each}}
+                    {{/if}}
+                    {{#record fieldObj}} {{/record}}
                   </div>
                 </form>
               </div>
@@ -127,14 +137,12 @@
                 <table class="table table-striped table-bordered table-hover dataTables-example">
                   <thead>
                     <tr>
-                      {{#fields users}}
-                      {{/fields}}
+                      {{#fields users}} {{/fields}}
                       <th><i class="fa fa-cogs" aria-hidden="true"></i></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {{#values users}}
-                    {{/values}}
+                    {{#values users}} {{/values}}
                   </tbody>
                 </table>
 
@@ -170,10 +178,10 @@
   <script>
     $(document).ready(function () {
       $('.navbar-minimalize').addClass("binded").click(function () {
-          $("body").toggleClass("mini-navbar");
-          SmoothlyMenu();
+        $("body").toggleClass("mini-navbar");
+        SmoothlyMenu();
       });
-      
+
       $('.dataTables-example').dataTable({
         responsive: true,
         "dom": 'T<"clear">lfrtip',

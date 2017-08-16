@@ -4,6 +4,7 @@ const _ = require('underscore');
 const Controller = require('./controller');
 const auth = require('../middlewares/auth');
 const config = require('../../../config/config');
+const upload = require('../../../config/upload');
 
 _.each(config.getModel(), (el, key) => {
   const User = require(`../../../models/${el}`);
@@ -18,6 +19,7 @@ _.each(config.getModel(), (el, key) => {
 
   const inputs = (req, res, next) => {
     let select;
+    const file = [];
     if (User.Model.schema.path('role')) {
       select = User.Model.schema.path('role').enumValues;
       const index = select.indexOf('SuperAdmin');
@@ -38,7 +40,11 @@ _.each(config.getModel(), (el, key) => {
         field !== 'created_at'
       ) {
         let ref;
-        if (types.options && types.options.ref) {
+        if (types.options && types.options.file) {
+          file.push({
+            field: fld,
+          });
+        } else if (types.options && types.options.ref) {
           const referance = types.options.ref;
           const model = require(`../../../models/${referance}`);
           model.Model.find({}, (error, response) => {
@@ -52,12 +58,14 @@ _.each(config.getModel(), (el, key) => {
     });
     req.select = select;
     req.fieldObj = fieldObj;
+    req.file = file;
     next();
   };
 
   router.use(`/${el}/:id*?`, inputs, auth, users, (req, res) => {
     req.users.el = el;
     const select = req.select;
+    const fileArr = req.file;
     const fieldObj = req.fieldObj;
     const objList = {
       session: req.session,
@@ -66,6 +74,7 @@ _.each(config.getModel(), (el, key) => {
       fieldObj,
       el,
       pages: config.getModel(),
+      fileArr,
     };
     let valueObj;
 
@@ -80,8 +89,10 @@ _.each(config.getModel(), (el, key) => {
               valueObj,
               el,
               pages: config.getModel(),
+              fileArr,
             },
           };
+          console.log(fileArr);
           res.render('admin/page/edit', objEdit);
         }
       });
@@ -93,7 +104,7 @@ _.each(config.getModel(), (el, key) => {
     next();
   };
 
-  router.use(`/add${el}`, mdl, Controller.add, (req, res) => {
+  router.post(`/add${el}`, upload.single('file'), mdl, Controller.add, (req, res) => {
     if (req.isCreated === true) res.redirect(el);
     else res.redirect(`/admin/${el}`);
   });

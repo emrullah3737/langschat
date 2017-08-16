@@ -2,6 +2,9 @@ const middle = {};
 let Models = {};
 middle.add = (req, res, next) => {
   const mdl = req.mdl;
+
+  if (req.file) req.body.file = `${req.file.destination}${req.file.filename}`;
+
   Models = require(`../../../models/${mdl}`);
   Models.Model.create(req.body, (err, user) => {
     if (!err) req.isCreated = true;

@@ -5,7 +5,7 @@ config.init()
     const express = require('express');
     const cors = require('cors');
     const admin = require('./router/admin');
-    const api = require('./router/api');
+    const api = require('./router/api/api');
     const cfgMongo = require('./config/mongoose');
     const hbs = require('./config/hbsHelpers');
 
@@ -13,6 +13,7 @@ config.init()
     app.use(cors());
     app.use('/admin', admin);
     app.use('/api', api);
+    app.use('/', express.static('public'));
     app.use('/admin', express.static('public'));
     app.set('view engine', 'hbs');
 
