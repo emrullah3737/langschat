@@ -133,7 +133,7 @@ HandleBars.registerHelper('updateRecord', (data) => {
       <select class="form-control s-b" name="${el.field}">`;
       _.each(el.ref.response, (mdlval, mdlkey) => {
         const boo = value === mdlval._id ? 'selected' : '';
-        str += `<option ${boo} value="${mdlval._id}">${mdlval.mail}</option>`;
+        str += `<option ${boo} value="${mdlval._id}">${mdlval._id}</option>`;
       });
       str += '</select></div></div><div class="col-md-12"><hr></div>';
     } else {

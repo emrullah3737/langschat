@@ -114,7 +114,7 @@ _.each(config.getModel(), (el, key) => {
     else res.redirect(`/admin/${el}`);
   });
 
-  router.use(`/update${el}`, mdl, Controller.update, (req, res) => {
+  router.post(`/update${el}`, upload.single('file'), mdl, Controller.update, (req, res) => {
     if (req.isUpdated === true) res.redirect(el);
     else res.redirect(`/admin/${el}`);
   });

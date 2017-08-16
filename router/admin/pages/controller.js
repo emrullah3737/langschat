@@ -26,6 +26,10 @@ middle.remove = (req, res, next) => {
 
 middle.update = (req, res, next) => {
   const mdl = req.mdl;
+  let dir;
+  if (req.file) dir = req.file.destination.split('public/')[1];
+  if (req.file) req.body.file = `${dir}${req.file.filename}`;
+  if (req.file === '') req.body.file = undefined;
   Models = require(`../../../models/${mdl}`);
   const obj = { _id: req.body._id };
   req.body.updated_at = Date.now();
