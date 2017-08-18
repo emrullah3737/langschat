@@ -1,6 +1,6 @@
 {
   "appName": "deneme",
-  "configuration": "dev",
+  "configuration": "production",
   "dev": {
     "endpoint": "localhost",
     "db": {
@@ -13,6 +13,7 @@
     "X-Client-Id": "594b88dc81f8c13c32c6737e",
     "X-Client-Secret": "594b88dc81f8c13c32c67377",
     "admin": {
+      "_slug": "admin@admin.com",
       "mail": "admin@admin.com",
       "password": "12345",
       "role": "SuperAdmin"
@@ -20,7 +21,9 @@
     "models": [
       "file",
       "profile",
-      "user"
+      "user",
+      "artist",
+      "record"
     ]
   },
   "test": {
@@ -41,6 +44,7 @@
     "X-Client-Id": "594b88dc81f8c13c32c6737e",
     "X-Client-Secret": "594b88dc81f8c13c32c67377",
     "admin": {
+      "_slug": "admin@admin.com",
       "mail": "admin@admin.com",
       "password": "6w7i0AxrsaZNIgoe",
       "role": "SuperAdmin"
@@ -48,7 +52,9 @@
     "models": [
       "file",
       "profile",
-      "user"
+      "user",
+      "artist",
+      "record"
     ]
   }
 }

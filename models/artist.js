@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const express = require('express');
 const Model = require('../config/model');
 
 const Schema = mongoose.Schema;
@@ -12,22 +13,14 @@ const model = {
     type: String,
     required: true,
   },
-  phone: {
-    type: Number,
-    required: true,
-  },
   photo: { type: mongoose.Schema.Types.ObjectId, ref: 'file', required: true },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
 };
 
 const schema = new Schema(model);
 
 const config = {
-  name: 'profile',
+  name: 'artist',
   schema,
-  owner: {
-    key: 'user',
-  },
   protect: {
     post: true,
     get: false,
@@ -35,12 +28,13 @@ const config = {
     delete: true,
   },
 };
+
 schema.pre('save', function (next) {
   const self = this;
   if (!self._slug) self._slug = self.name;
   next();
 });
 
-const Profile = new Model(config);
+const Artist = new Model(config);
 
-module.exports = Profile;
+module.exports = Artist;

@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
-const express = require('express');
 const Model = require('../config/model');
 const configs = require('../config/config');
 
-const router = express.Router();
 const Schema = mongoose.Schema;
 
 
 const model = {
+  _slug: {
+    type: String,
+    required: false,
+  },
   mail: {
     type: String,
     required: true,
@@ -51,16 +53,21 @@ const config = {
     role: true,
   },
 };
+
+schema.pre('save', function (next) {
+  const self = this;
+  if (!self._slug) self._slug = self.mail;
+  next();
+});
+
 const User = new Model(config);
 // SuperAdmin
 const adminData = configs.getAdmin();
+
 User.Model.findOneAndUpdate(
   adminData,
   adminData,
   { upsert: true },
-  (err, res) => {
-    if (err) console.log(err);
-    else console.log(res);
-  });
+  (err, res) => {});
 
 module.exports = User;

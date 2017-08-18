@@ -1,12 +1,13 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const Model = require('../config/model');
-const configs = require('../config/config');
 
-const router = express.Router();
 const Schema = mongoose.Schema;
 
 const model = {
+  _slug: {
+    type: String,
+    required: false,
+  },
   name: {
     type: String,
     required: true,
@@ -26,9 +27,7 @@ const config = {
 
 schema.pre('save', function (next) {
   const self = this;
-  if (self.isNew) {
-    console.log(self);
-  }
+  if (!self._slug) self._slug = self.name;
   next();
 });
 
