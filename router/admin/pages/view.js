@@ -22,10 +22,6 @@ _.each(config.getModel(), (el, key) => {
     const file = [];
     if (User.Model.schema.path('role')) {
       select = User.Model.schema.path('role').enumValues;
-      const index = select.indexOf('SuperAdmin');
-      if (index >= 0) {
-        select.splice(index, 1);
-      }
     }
     const fieldObj = [];
     const fields = User.Model.schema.eachPath((fld, types) => {
@@ -92,7 +88,6 @@ _.each(config.getModel(), (el, key) => {
               fileArr,
             },
           };
-          console.log(fileArr);
           res.render('admin/page/edit', objEdit);
         }
       });

@@ -66,6 +66,14 @@ module.exports = class Mongo {
       sort = req.query.s || req.query.sort || '';
       populate = req.query.p || req.query.populate || '';
       populate = populate.split(',');
+      if (req.query.where) {
+        const where = req.query.where;
+        const whereArr = where.split(',');
+        _.each(whereArr, (e, i) => {
+          const objArr = e.split(':');
+          cond[objArr[0]] = objArr[1];
+        });
+      }
     }
 
     return this.token(req, (error, decode) => {
