@@ -51,6 +51,31 @@ module.exports = class Mongo {
     }).populate(populate).sort(sort).limit(limit);
   }
 
+  populate(populate) {
+    populate = populate.split(',');
+    _.each(populate, (e, i) => {
+      const deepPopulate = e.split('.');
+      if (deepPopulate.length) {
+        populate[i] = this.deepPopulate({}, deepPopulate);
+      }
+    });
+    return populate;
+  }
+
+  deepPopulate(obje, n) {
+    let populate;
+    if (!obje.path) populate = '';
+    else populate = obje;
+    if (n.length === 1) return { path: n[0], populate };
+    const obj = {
+      path: n[n.length - 1],
+      populate,
+    };
+    n.pop();
+    return this.deepPopulate(obj, n);
+  }
+
+
   getData(req, res) {
     if (this.protect && this.protect.get) return this.status403(req, res);
     if (this.headerController(req) === false) return this.status403(req, res);
@@ -65,7 +90,7 @@ module.exports = class Mongo {
       limit = parseInt(req.query.l, 10) || parseInt(req.query.limit, 10) || 10;
       sort = req.query.s || req.query.sort || '';
       populate = req.query.p || req.query.populate || '';
-      populate = populate.split(',');
+      populate = this.populate(populate);
       if (req.query.where) {
         const where = req.query.where;
         const whereArr = where.split(',');
