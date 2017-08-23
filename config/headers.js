@@ -15,10 +15,11 @@ class Headers {
     return true;
   }
 
-  token(req) {
-    const ClientToken = req.get('X-Client-Token');
+  token(req, cb) {
+    const ClientToken = req.get('X-Client-Token') || '';
     jwt.verify(ClientToken, 'secret', (err, decode) => {
-      if (err) return console.log(err);
+      if (err) return cb(true, null);
+      return cb(null, decode);
     });
   }
 

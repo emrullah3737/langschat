@@ -3,6 +3,7 @@ const _ = require('underscore');
 const config = require('./config');
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+const header = require('./headers');
 
 module.exports = class Mongo {
   constructor(opt = { name: 'modelName', schema: {} }) {
@@ -46,8 +47,8 @@ module.exports = class Mongo {
           return deepData;
         });
       }
-      if (!err && data.length > 0) this.status200(req, res, data);
-      else this.status404(req, res, err);
+      if (!err && data.length > 0) header.status200(req, res, data);
+      else header.status404(req, res, err);
     }).populate(populate).sort(sort).limit(limit);
   }
 
@@ -77,8 +78,8 @@ module.exports = class Mongo {
 
 
   getData(req, res) {
-    if (this.protect && this.protect.get) return this.status403(req, res);
-    if (this.headerController(req) === false) return this.status403(req, res);
+    if (this.protect && this.protect.get) return header.status403(req, res);
+    if (header.headerController(req) === false) return header.status403(req, res);
 
     let limit = 10;
     let sort = '';
@@ -101,27 +102,27 @@ module.exports = class Mongo {
       }
     }
 
-    return this.token(req, (error, decode) => {
+    return header.token(req, (error, decode) => {
       if (this.owner && !error) {
         if (this.owner.key) cond[this.owner.key] = decode._id;
-      } else if (this.owner && error) return this.status403(req, res);
+      } else if (this.owner && error) return header.status403(req, res);
       this.find(req, res, cond, populate, sort, limit);
     });
   }
 
   postData(req, res) {
-    if (this.protect && this.protect.post) return this.status403(req, res);
-    if (this.headerController(req) === false) return this.status403(req, res);
+    if (this.protect && this.protect.post) return header.status403(req, res);
+    if (header.headerController(req) === false) return header.status403(req, res);
     const model = new this.Model(req.body);
     model.save((err, data) => {
-      if (!err) this.status200(req, res, data);
-      else this.status403(req, res, err);
+      if (!err) header.status200(req, res, data);
+      else header.status403(req, res, err);
     });
   }
 
   putData(req, res) {
-    if (this.protect && this.protect.put) return this.status403(req, res);
-    if (this.headerController(req) === false) return this.status403(req, res);
+    if (this.protect && this.protect.put) return header.status403(req, res);
+    if (header.headerController(req) === false) return header.status403(req, res);
     if (req.params.id !== undefined) {
       this.Model.update(
         { _id: req.params.id },
@@ -131,57 +132,20 @@ module.exports = class Mongo {
             data,
             body: req.body,
           };
-          if (err) this.status403(req, res, err);
-          else this.status200(req, res, obj);
+          if (err) header.status403(req, res, err);
+          else header.status200(req, res, obj);
         });
     } else this.specErr(req, res);
   }
 
   deleteData(req, res) {
-    if (this.protect && this.protect.delete) return this.status403(req, res);
-    if (this.headerController(req) === false) return this.status403(req, res);
+    if (this.protect && this.protect.delete) return header.status403(req, res);
+    if (header.headerController(req) === false) return header.status403(req, res);
     if (req.params.id !== undefined) {
       this.Model.remove({ _id: req.params.id }, (err, data) => {
-        if (!err) this.status200(req, res, { data, id: req.params.id });
-        else this.status404(req, res, err);
+        if (!err) header.status200(req, res, { data, id: req.params.id });
+        else header.status404(req, res, err);
       });
     } else this.specErr(req, res);
-  }
-
-  status404(req, res, err) {
-    console.log(err);
-    if (err) res.status(404).json({ error: err.name, message: err.message, status: 404 });
-    else res.status(404).json({ error: 'NotFound', message: 'Data Not Found', status: 404 });
-  }
-
-  status403(req, res, err) {
-    console.log(err);
-    if (err) res.status(403).json({ error: err.name, message: err.message, status: 403 });
-    else res.status(403).json({ error: 'Unauthorized', message: 'Unauthorized zone', status: 403 });
-  }
-
-  status200(req, res, data) {
-    res.status(200).json({ data, status: 200 });
-  }
-
-  specErr(req, res) {
-    res.status(400).json({ err: 'ValidationError', message: 'id is undefined', meta: 404 });
-  }
-
-  token(req, cb) {
-    const ClientToken = req.get('X-Client-Token') || '';
-    jwt.verify(ClientToken, 'secret', (err, decode) => {
-      if (err) return cb(true, null);
-      return cb(null, decode);
-    });
-  }
-
-  headerController(req) {
-    const Id = config.getData('X-Client-Id');
-    const Secret = config.getData('X-Client-Secret');
-    const ClientId = req.get('X-Client-Id');
-    const ClientSecret = req.get('X-Client-Secret');
-    if ((Id !== '' && Secret !== '') && (Id !== ClientId || Secret !== ClientSecret)) return false;
-    return true;
   }
 };
